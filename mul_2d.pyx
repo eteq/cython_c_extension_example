@@ -33,10 +33,11 @@ def mul_2d(input_data, mul=2):
     cdef double** inptr = sing_to_dbl_ptr(&c_input[0,0], inpt.shape[0], inpt.shape[1])
     cdef double** resptr = sing_to_dbl_ptr(&c_result[0,0], inpt.shape[0], inpt.shape[1])
 
-    cython_declaration_module.mul_2d(inptr, resptr, mul, inpt.shape[0], inpt.shape[1])
-
-    free(inptr)
-    free(resptr)
+    try:
+        cython_declaration_module.mul_2d(inptr, resptr, mul, inpt.shape[0], inpt.shape[1])
+    finally:
+        free(inptr)
+        free(resptr)
     
     return result
 
