@@ -1,25 +1,24 @@
 import numpy as np
-from astropy.convolution import Gaussian2DKernel
 
 cimport cython_declaration_module
 
-def pow_2d(input_data, power=2):
+def mul_2d(input_data, mul=2):
     """
-    takes a 2d image and yields it to a certain power
+    takes a 2d image and yields it multiplied by something
 
     Parameters
     ----------
     input_data : array-like
-        The input array to power
-    power : float
-        the power to set the input to
+        The input array to multiply
+    mul : float
+        the number to multiply by
 
     Returns
     -------
     result : 2D numpy array
-        ``input_data`` to the power of ``power``
+        ``input_data`` multiplied by ``mul``
     """
-    cdef double [:, ::1] c_input, c_result
+    cdef double [::1] c_input, c_result
 
     # this will only make a copy if the input dtype is not already a double
     inpt = np.array(input_data, dtype=np.double, copy=False)
@@ -28,6 +27,6 @@ def pow_2d(input_data, power=2):
     c_input = inpt
     c_result = result
 
-    cython_declaration_module.square_2d(&c_input[0], &c_result[0], power, inpt.shape[0], inpt.shape[1])
+    cython_declaration_module.mul_2d(&c_input[0], &c_result[0], mul, inpt.shape[0], inpt.shape[1])
     
     return result
